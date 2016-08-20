@@ -1,0 +1,16 @@
+/*
+ * Inter-Container Build Information
+ *
+ * Copyright (c) 2016, Lans Zhang
+ * All rights reserved.
+ *
+ * See "LICENSE" for license terms.
+ *
+ * Author:
+ *      Lans Zhang <lans.zhang2008@gmail.com>
+ */
+
+#include <ic.h>
+
+char ic_git_commit[] = "@@IC_GIT_COMMIT@@";
+char ic_build_machine[] = "@@IC_BUILD_MACHINE@@";

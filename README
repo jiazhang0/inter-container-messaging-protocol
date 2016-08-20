@@ -1,0 +1,37 @@
+Inter-Container Messaging Protocol
+==================================
+
+This project provides with an implementation for Inter-Container Messaging
+Protocol (ICMP).
+
+Currently, the resulting binaries consist of icmpd (ICMP Daemon), icmpc
+(ICMP Client) and libicmp.so.
+
+Build
+-----
+$ make
+
+Note: use "CROSS_COMPILE=" in command line to specify cross compilation.
+
+Installation
+------------
+$ sudo make install
+$ sudo ldconfig
+
+Help
+----
+- For the available options:
+# icmpd -h
+# icmpc -h
+
+- For the available sub-commands:
+# icmpd help <subcmd>
+# icmpc help <subcmd>
+
+Example
+-------
+- Start the daemon
+# icmpd -q start -c /etc/icmpd.conf &
+
+- Run the client
+$ icmpc -q commandline 'ls -l'
