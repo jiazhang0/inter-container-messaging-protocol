@@ -7,7 +7,7 @@ OBJS_$(BIN_NAME) := \
 		    icmpc.o \
 		    subcmd_help.o \
 		    subcmd_echo.o \
-		    subcmd_command.o
+		    subcmd_commandline.o
 
 all: $(BIN_NAME) Makefile
 

@@ -26,6 +26,14 @@ static char *opt_requestor;
 static int
 init_context(icmpc_context_t *ctx)
 {
+	/*
+	 * TODO: determine the container name in this order.
+	 * 1. Check lxc setting
+	 * 2. Check ocmpc.conf
+	 * 3. Check hostname
+	 * 4. Check -r option
+	 * 5. Use the default "local"
+	 */
 	if (!opt_requestor)
 		ctx->container_name = strdup("local");
 	else
@@ -54,7 +62,7 @@ print_result(void *context, uint16_t cc, const void *data,
 }
 
 static int
-handle_protocol(icmpc_context_t *ctx, char *cmdline, char *requestor)
+handle_protocol(icmpc_context_t *ctx, char *cmdline)
 {
 	void *msg;
 	unsigned long msg_len;
@@ -67,6 +75,7 @@ handle_protocol(icmpc_context_t *ctx, char *cmdline, char *requestor)
 		return rc;
 	}
 
+	char *requestor = ctx->container_name;
 	ic_transport_t tr = ic_transport_create_slave(requestor);
 	if (!tr) {
 		err("Unable to create the slave transport for %s\n",
@@ -147,7 +156,7 @@ parse_arg(int opt, char *optarg)
 }
 
 static int
-run_command(char *prog)
+run_commandline(char *prog)
 {
 	int rc;
 
@@ -161,10 +170,11 @@ run_command(char *prog)
 	}
 
 	icmpc_context_t ctx;
-	init_context(&ctx);
-
-	rc = handle_protocol(&ctx, opt_cmdline, ctx.container_name);
-	destroy_context(&ctx);
+	rc = init_context(&ctx);
+	if (!rc) {
+		rc = handle_protocol(&ctx, opt_cmdline);
+		destroy_context(&ctx);
+	}
 
 	return rc;
 }
@@ -175,11 +185,11 @@ static struct option long_opts[] = {
 	{ 0 },	/* NULL terminated */
 };
 
-subcommand_t subcommand_command = {
-	.name = "command",
+subcommand_t subcommand_commandline = {
+	.name = "commandline",
 	.optstring = "-c:r:",
 	.long_opts = long_opts,
 	.parse_arg = parse_arg,
 	.show_usage = show_usage,
-	.run = run_command,
+	.run = run_commandline,
 };

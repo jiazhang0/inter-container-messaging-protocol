@@ -102,7 +102,7 @@ parse_options(int argc, char *argv[])
 }
 
 extern subcommand_t subcommand_help;
-extern subcommand_t subcommand_command;
+extern subcommand_t subcommand_commandline;
 extern subcommand_t subcommand_echo;
 
 static void
@@ -122,7 +122,7 @@ main(int argc, char *argv[], char *envp[])
 		dbg_cont("  [%d]%s\n", i, argv[i]);
 
 	subcommand_add(&subcommand_help);
-	subcommand_add(&subcommand_command);
+	subcommand_add(&subcommand_commandline);
 	subcommand_add(&subcommand_echo);
 
 	int rc = parse_options(argc, argv);
