@@ -82,6 +82,9 @@ extern int
 ic_transport_append_vector_data(ic_transport_t tr, void *data,
 				unsigned long data_len);
 
+extern void *
+ic_transport_alloc_data(ic_transport_t tr, unsigned long data_len);
+
 extern void
 ic_transport_free_data(ic_transport_t tr, void *data);
 

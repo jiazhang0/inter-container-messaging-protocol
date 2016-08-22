@@ -23,7 +23,7 @@ typedef struct {
 	int (*send_iov_data)(int sock, struct nn_iovec *iov,
 			     unsigned int nr_iov);
 	int (*pollin)(int *sock, unsigned int nr_sock);
-	void *(*allic_data)(unsigned long data_len);
+	void *(*alloc_data)(unsigned long data_len);
 	void (*free_data)(void *data);
 } ic_transport_ops_t;
 
@@ -45,7 +45,7 @@ static ic_transport_ops_t master_transport_ops = {
 	.receive_data = nanomsg_receive_data,
 	.send_iov_data = nanomsg_send_iov_data,
 	.pollin = nanomsg_pollin,
-	.allic_data = nanomsg_alloc_data,
+	.alloc_data = nanomsg_alloc_data,
 	.free_data = nanomsg_free_data,
 };
 
@@ -58,7 +58,7 @@ static ic_transport_ops_t slave_transport_ops = {
 	.receive_data = nanomsg_receive_data,
 	.send_iov_data = nanomsg_send_iov_data,
 	.pollin = nanomsg_pollin,
-	.allic_data = nanomsg_alloc_data,
+	.alloc_data = nanomsg_alloc_data,
 	.free_data = nanomsg_free_data,
 };
 
@@ -271,6 +271,14 @@ ic_transport_send_vector_data(ic_transport_t tr, vector_t *vec)
 	eee_mfree(iov);
 
 	return rc;
+}
+
+void *
+ic_transport_alloc_data(ic_transport_t tr, unsigned long data_len)
+{
+	ic_transport_context_t *ctx = to_ic_transport_context_t(tr);
+
+	return ctx->ops->alloc_data(data_len);
 }
 
 void
