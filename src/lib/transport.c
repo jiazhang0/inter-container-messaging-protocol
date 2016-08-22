@@ -158,6 +158,9 @@ ic_transport_create_slave(const char *name)
 	if (ctx)
 		return to_ic_transport_t(ctx);
 
+	err("Unable to create the slave transport for %s\n",
+	    name);
+
 	return 0;
 }
 

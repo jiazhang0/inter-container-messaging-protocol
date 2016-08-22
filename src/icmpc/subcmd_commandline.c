@@ -77,11 +77,8 @@ handle_protocol(icmpc_context_t *ctx, char *cmdline)
 
 	char *requestor = ctx->container_name;
 	ic_transport_t tr = ic_transport_create_slave(requestor);
-	if (!tr) {
-		err("Unable to create the slave transport for %s\n",
-		    requestor);
+	if (!tr)
 		return -1;
-	}
 
 	dbg("Preparing to send ICMP request message ...\n");
 
