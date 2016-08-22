@@ -626,7 +626,8 @@ create_transport(icmpd_context_t *ctx)
 
 		if (!strcmp(ctx->monitored_container[i], ctx->container_name)) {
 			child = (pid_t)0;
-			vector_set_obj(ctx->monitored_worker, i, &child);
+			vector_set_obj(ctx->monitored_worker, i, &child,
+				       sizeof(child));
 			continue;
 		}
 
@@ -634,7 +635,7 @@ create_transport(icmpd_context_t *ctx)
 		if ((int)child < 0)
 			goto err_create_worker;
 
-		vector_set_obj(ctx->monitored_worker, i, &child);
+		vector_set_obj(ctx->monitored_worker, i, &child, sizeof(child));
 	}
 
 #if 0

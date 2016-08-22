@@ -219,7 +219,7 @@ vector_get_obj(vector_t *vec, unsigned int index)
 }
 
 int
-vector_set_obj(vector_t *vec, unsigned int index, void *buf)
+vector_set_obj(vector_t *vec, unsigned int index, void *buf, unsigned long len)
 {
 	if (index >= vec->nr_vector) {
 		err("The index (%d) attempting to cross the border (%d)\n",
@@ -242,8 +242,10 @@ vector_set_obj(vector_t *vec, unsigned int index, void *buf)
 			eee_memcpy(*orig, buf, vec->obj_size);
 		else
 			*orig = buf;
-	} else
-		*(var_vector_desc_t *)orig = *(var_vector_desc_t *)buf;
+	} else {
+		((var_vector_desc_t *)orig)->buf = buf;
+		((var_vector_desc_t *)orig)->len = len;
+	}
 
 	return 0;
 }

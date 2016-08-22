@@ -78,7 +78,8 @@ extern void *
 vector_get_obj(vector_t *vec, unsigned int index);
 
 extern int
-vector_set_obj(vector_t *vec, unsigned int index, void *buf);
+vector_set_obj(vector_t *vec, unsigned int index, void *buf,
+	       unsigned long len);
 
 extern int
 vector_increase_obj(vector_t *vec, void *ctor_arg);
