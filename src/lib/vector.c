@@ -215,7 +215,7 @@ vector_get_obj(vector_t *vec, unsigned int index)
 	if (vec->obj_size)
 		return vec->budget[index];
 	else
-		return (var_vector_desc_t *)vec->budget + index;
+		return ((var_vector_desc_t *)vec->budget + index)->buf;
 }
 
 long
