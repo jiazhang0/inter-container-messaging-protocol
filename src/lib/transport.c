@@ -264,8 +264,18 @@ ic_transport_send_vector_data(ic_transport_t tr, vector_t *vec)
 		return -1;
 	}
 
-	for (unsigned int i = 0; i < nr_vec; ++i)
-		iov[i] = *(struct nn_iovec *)(vec->budget[i]);
+	for (unsigned int i = 0; i < nr_vec; ++i) {
+		size_t len = vector_get_obj_len(vec, i);
+		void *buf = vector_get_obj(vec, i);
+
+		if (len) {
+			iov[i].iov_len = len;
+			iov[i].iov_base = buf;
+		} else {
+			iov[i].iov_len = NN_MSG;
+			iov[i].iov_base = &buf;
+		}
+	}
 
 	int rc = ctx->ops->send_iov_data(ctx->socket, iov, nr_vec);
 	eee_mfree(iov);
