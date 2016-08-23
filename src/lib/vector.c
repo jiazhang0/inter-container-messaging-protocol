@@ -203,7 +203,7 @@ vector_shrink(vector_t *vec, int nr_vector)
 }
 
 void *
-vector_get_obj(vector_t *vec, unsigned int index)
+vector_get_obj(vector_t *vec, int index)
 {
 	if (index >= vec->nr_vector) {
 		err("The index (%d) attempting to cross the border (%d)\n",
@@ -212,6 +212,9 @@ vector_get_obj(vector_t *vec, unsigned int index)
 		return NULL;
 	}
 
+	if (index < 0)
+		index = vec->nr_vector - 1;
+
 	if (vec->obj_size)
 		return vec->budget[index];
 	else
@@ -219,7 +222,7 @@ vector_get_obj(vector_t *vec, unsigned int index)
 }
 
 long
-vector_get_obj_len(vector_t *vec, unsigned int index)
+vector_get_obj_len(vector_t *vec, int index)
 {
 	if (index >= vec->nr_vector) {
 		err("The index (%d) attempting to cross the border (%d)\n",
@@ -227,6 +230,9 @@ vector_get_obj_len(vector_t *vec, unsigned int index)
 		vector_set_errno(VECTOR_ERRNO_OUT_OF_RANGE);
 		return -1;
 	}
+
+	if (index < 0)
+		index = vec->nr_vector - 1;
 
 	if (vec->obj_size)
 		return vec->obj_size;
@@ -235,7 +241,7 @@ vector_get_obj_len(vector_t *vec, unsigned int index)
 }
 
 int
-vector_set_obj(vector_t *vec, unsigned int index, void *buf, unsigned long len)
+vector_set_obj(vector_t *vec, int index, void *buf, unsigned long len)
 {
 	if (index >= vec->nr_vector) {
 		err("The index (%d) attempting to cross the border (%d)\n",
@@ -243,6 +249,9 @@ vector_set_obj(vector_t *vec, unsigned int index, void *buf, unsigned long len)
 		vector_set_errno(VECTOR_ERRNO_OUT_OF_RANGE);
 		return -1;
 	}
+
+	if (index < 0)
+		index = vec->nr_vector - 1;
 
 	void **orig;
 	if (vec->obj_size)
