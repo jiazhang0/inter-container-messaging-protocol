@@ -80,6 +80,9 @@ vector_get_obj(vector_t *vec, int index);
 extern long
 vector_get_obj_len(vector_t *vec, int index);
 
+extern void **
+vector_get_obj_ref(vector_t *vec, int index);
+
 extern int
 vector_set_obj(vector_t *vec, int index, void *buf,
 	       unsigned long len);

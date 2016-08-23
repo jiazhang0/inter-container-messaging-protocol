@@ -221,6 +221,25 @@ vector_get_obj(vector_t *vec, int index)
 		return ((var_vector_desc_t *)vec->budget + index)->buf;
 }
 
+void **
+vector_get_obj_ref(vector_t *vec, int index)
+{
+	if (index >= vec->nr_vector) {
+		err("The index (%d) attempting to cross the border (%d)\n",
+		    index, vec->nr_vector);
+		vector_set_errno(VECTOR_ERRNO_OUT_OF_RANGE);
+		return NULL;
+	}
+
+	if (index < 0)
+		index = vec->nr_vector - 1;
+
+	if (vec->obj_size)
+		return &vec->budget[index];
+	else
+		return &(((var_vector_desc_t *)vec->budget + index)->buf);
+}
+
 long
 vector_get_obj_len(vector_t *vec, int index)
 {
