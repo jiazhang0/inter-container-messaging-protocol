@@ -301,22 +301,34 @@ int
 nanomsg_send_iov_data(int sock, struct nn_iovec *iov, unsigned int nr_iov)
 {
 	struct nn_msghdr hdr;
-	int nr;
 
-	eee_memset(&hdr, 0, sizeof(hdr));
+	memset(&hdr, 0, sizeof(hdr));
 	hdr.msg_iov = iov;
 	hdr.msg_iovlen = nr_iov;
-again:
-	nr = nn_sendmsg(sock, &hdr, 0);
-	if (nr != nr_iov) {
-		if (errno == EINTR)
-			goto again;
 
-		nn_print_error("Unable to send the expected amount of iov");
+	int err;
+
+	do {
+		int len = nn_sendmsg(sock, &hdr, 0);
+		if (len >= 0)
+			return len;
+
+		err = nn_errno();
+	} while (err == EINTR);
+
+	if (err == ETIMEDOUT) {
+		dbg("Tx iov timeout\n");
 		return -1;
 	}
 
-	return 0;
+	if (err == EAGAIN) {
+		err("Need to tx iov again\n");
+		return -1;
+	}
+
+	err("Failed to send iov data\n");
+
+	return -1;
 }
 
 int
