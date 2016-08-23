@@ -58,6 +58,10 @@ nanomsg_pollin(int *sock, unsigned int nr_sock);
 extern int
 nanomsg_receive_data(int sock, void **data, unsigned long *data_len);
 
+extern int
+nanomsg_receive_iov_data(int sock, struct nn_iovec *iov,
+			 unsigned int nr_iov);
+
 extern void *
 nanomsg_alloc_data(unsigned long data_len);
 

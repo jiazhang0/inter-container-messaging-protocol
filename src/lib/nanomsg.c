@@ -374,6 +374,41 @@ again:
 }
 
 int
+nanomsg_receive_iov_data(int sock, struct nn_iovec *iov,
+			 unsigned int nr_iov)
+{
+	struct nn_msghdr hdr;
+
+	memset(&hdr, 0, sizeof(hdr));
+	hdr.msg_iov = iov;
+	hdr.msg_iovlen = nr_iov;
+
+	int err;
+
+	do {
+		int len = nn_recvmsg(sock, &hdr, 0);
+		if (len >= 0)
+			return len;
+
+		err = nn_errno();
+	} while (err == EINTR);
+
+	if (err == ETIMEDOUT) {
+		dbg("Rx iov timeout\n");
+		return -1;
+	}
+
+	if (err == EAGAIN) {
+		err("Need to rx iov again\n");
+		return -1;
+	}
+
+	err("Failed to receive iov data\n");
+
+	return -1;
+}
+
+int
 nanomsg_pollin(int *sock, unsigned int nr_sock)
 {
 	if (!sock || !nr_sock)
